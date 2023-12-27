@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Symbol</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  　<div class="bg-image">
+  　  
+  
+
+    <script src="https://xembook.github.io/nem2-browserify/symbol-sdk-2.0.4.js"></script>
+    <script language="JavaScript">
+        NODE = 'https://ik1-432-48199.vs.sakura.ne.jp:3001';
+        sym = require("/node_modules/symbol-sdk");
+        repo = new sym.RepositoryFactoryHttp(NODE);
+        txRepo = repo.createTransactionRepository();
+        (async () => {
+            networkType = await repo.getNetworkType().toPromise();
+            generationHash = await repo.getGenerationHash().toPromise();
+            epochAdjustment = await repo.getEpochAdjustment().toPromise();
+        })();
+        function clog(signedTx) {
+            console.log(NODE + "/transactionStatus/" + signedTx.hash);
+            console.log(NODE + "/transactions/confirmed/" + signedTx.hash);
+            console.log("https://symbol.fyi/transactions/" + signedTx.hash);
+            console.log("https://testnet.symbol.fyi/transactions/" + signedTx.hash);
+        }
+    </script>
+    <p>下のボタンをクリックし、SYMBOLアドレスを入力するとthank you token を10個手に入れれます。</p>
+    <input type="button" value="button" id="btn">
+    <script>//ここからボタンクリックした際の処理が書かれています。
+        function butotnClick() {
+    //aliceのアカウント呼び出します。
+            alice = sym.Account.createFromPrivateKey('B89DC2EAA80DF416D14AE81B865536FF95380D5340074B01CA9FE8F48A318624', sym.NetworkType.MAIN_NET);
+            console.log(alice);
+//bobへ１XYM送信するトランザクションを生成しています。
+            tx = sym.TransferTransaction.create(
+                sym.Deadline.create(epochAdjustment, 6),
+                sym.Address.createFromRawAddress(prompt("アドレスを入力してください")),
+                [new sym.Mosaic(new sym.MosaicId('33C919F156793250'), sym.UInt64.fromUint(10))],
+                sym.PlainMessage.create('I hope that many people will express my gratitude'),
+                sym.NetworkType.MAIN_NET,
+            ).setMaxFee(10);
+            console.log(tx);
+//aliceの秘密鍵で署名をしています。
+            signedTx = alice.sign(tx, generationHash);
+            console.log(signedTx);
+//ノードへ署名されたアカウントをアナウンスします。
+            new sym.TransactionHttp(NODE)
+                .announce(signedTx)
+                .subscribe((x) => console.log(x), (err) => console.error(err));
+//すべてが正常に処理された際に「send」のPOPを出します。
+            alert('send');
+        }
+
+        let button = document.getElementById('btn');
+        button.addEventListener('click', butotnClick);
+    </script>
+    
+    </div>
+</body>
+</html>

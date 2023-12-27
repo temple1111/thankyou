@@ -1,0 +1,7 @@
+.bg-image {
+  background-image: url('img/thank you.png');
+  width: 50%;
+  height: 100vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
