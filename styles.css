@@ -9,10 +9,10 @@
 @media (max-width: 480px) {
     /* モバイルデバイス用のスタイル */
     .bg-image {
-    /*    font-family: Arial, sans-serif;*/
-    /*background-color: #f5f5f5;*/
-    /*margin: 0;*/
-    /*padding: 0;*/
+        font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
     background-image: url('img/thank you.png');
      /* 画像をウィンドウ全体にカバーさせる */
     background-repeat: no-repeat; /* 画像の繰り返し表示を無効にする */
